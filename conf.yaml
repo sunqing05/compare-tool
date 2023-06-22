@@ -1,0 +1,7 @@
+# 待处理数据目录(支持绝对路径)
+data_dir: data
+# 基准文件夹关键字
+base_folder_name: scene
+# 差异文件提取目录
+diff_folder_name: diff
+
