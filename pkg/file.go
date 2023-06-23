@@ -3,7 +3,6 @@ package pkg
 import (
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 func MoveDir(srcDir, destDir string) error {
@@ -31,15 +30,6 @@ func MoveDir(srcDir, destDir string) error {
 
 // 获取目标文件夹路径
 func getDest(path, dest string) string {
-	rel, _ := filepath.Rel(dest, filepath.Dir(path))
-	dirs := strings.Split(rel, string(os.PathSeparator))
-	rs := ""
-	for i, v := range dirs {
-		if i < 1 {
-			//跳过第一层
-			continue
-		}
-		rs = filepath.Join(rs, v)
-	}
-	return filepath.Join(dest, rs)
+	rel, _ := filepath.Rel(filepath.Dir(dest), filepath.Dir(path))
+	return filepath.Join(dest, rel)
 }
