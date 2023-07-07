@@ -105,6 +105,9 @@ func compare(root string, base string, others []string, diffFolder string) {
 			for _, cen := range cens {
 				ffMap[en.Name()] = append(ffMap[en.Name()], getFileName(cen.Name()))
 			}
+		} else {
+			//如果是文件，放到空字符串为key的值下面
+			ffMap[""] = append(ffMap[""], getFileName(en.Name()))
 		}
 	}
 	//开始处理
@@ -136,14 +139,30 @@ func compare(root string, base string, others []string, diffFolder string) {
 					for _, i := range ffMap[eno.Name()] {
 						if getFileName(ceno.Name()) == i {
 							f = 1
+							break
 						}
 					}
 					if f == 0 {
 						froot := filepath.Join(nroot, ceno.Name())
 						if err := pkg.MoveDir(froot, diffFolder); err != nil {
-							fmt.Printf("移动文件夹 '%s' 错误:%v \n", froot, err)
+							fmt.Printf("移动文件 '%s' 错误:%v \n", froot, err)
 							return
 						}
+					}
+				}
+			} else {
+				f := 0
+				for _, i := range ffMap[""] {
+					if getFileName(eno.Name()) == i {
+						f = 1
+						break
+					}
+				}
+				if f == 0 {
+					froot := filepath.Join(o, eno.Name())
+					if err := pkg.MoveDir(froot, diffFolder); err != nil {
+						fmt.Printf("移动文件 '%s' 错误:%v \n", froot, err)
+						return
 					}
 				}
 			}
